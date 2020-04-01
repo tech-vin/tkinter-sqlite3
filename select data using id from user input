@@ -1,0 +1,66 @@
+import sqlite3
+from tkinter import *
+
+# create database or connect with existing database
+conn = sqlite3.connect('employee.db')
+# create cursor
+c = conn.cursor()
+
+# create table
+# c.execute('''
+# Create table emp(
+# name text,
+# designation text,
+# gender text,
+# salary real
+# )
+# ''')
+
+
+# commit changes
+conn.commit()
+# close connection
+conn.close()
+
+# Starting with tkinter
+root = Tk()
+root.title('Employee')
+
+
+def query():
+    conn = sqlite3.connect('employee.db')
+    c = conn.cursor()
+    c.execute(f'Select * from emp where oid={id.get()}')
+    records = c.fetchall()
+    print_records = ''
+    for record in records:
+        print_records += str(record) + '\n'
+
+    query_label = Label(frame, text=print_records)
+    query_label.grid(row=9, column=0, columnspan=1)
+
+    f = open("Exyz.txt", "w+")
+    f.write(print_records)
+    f.close()
+    conn.commit()
+    conn.close()
+
+
+# Frame
+frame = LabelFrame(root, text='Frame', padx=10, pady=10)
+frame.pack()
+
+# Entry boxes
+id = Entry(frame, width=30)
+id.grid(row=0, column=1, pady=5, padx=20)
+
+# Labels
+id_label = Label(frame, text='Enter Employee_ID', padx=5, pady=5)
+id_label.grid(row=0)
+
+
+view_btn = Button(frame, text='FETCH ALL', bg='gray', fg='white', command=query)
+view_btn.grid(row=5, column=0, columnspan=2, pady=10, padx=10, ipadx=100)
+
+# main loop
+root.mainloop()
